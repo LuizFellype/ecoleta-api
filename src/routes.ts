@@ -4,13 +4,14 @@ import { celebrate, Joi } from 'celebrate'
 import multerConfig from './config/multer'
 import knex from './database/connections'
 
-const routes = express.Router()
+const apiUrl = process.env.APP_API_URL || 'http://localhost:3333'
 
+const routes = express.Router()
 routes.get('/items', async (req, res) => {
     try {
         const items = await knex('items').select('*')
 
-        const serializedItems = items.map(({ title, image }) => ({ title, image_url: `http://localhost:3333/uploads/${image}` }))
+        const serializedItems = items.map(({ title, image }) => ({ title, image_url: `${apiUrl}/uploads/${image}` }))
 
         res.json(serializedItems)
     } catch (error) {
@@ -34,7 +35,7 @@ routes.get('/points', async (req, res) => {
 
         const serializedPoints = points.map(({ image, restOfThePoint }) => ({
             ...restOfThePoint,
-            image_url: `http://localhost:3333/uploads/${image}`
+            image_url: `${apiUrl}/${image}`
         }))
 
         res.json(serializedPoints)
@@ -53,7 +54,7 @@ routes.get('/point/:id', async (req, res) => {
 
         const serializedPoint = {
             ...point,
-            image_url: `http://localhost:3333/uploads/${point.image}`
+            image_url: `${apiUrl}/${point.image}`
         }
 
         const items = await knex('items')

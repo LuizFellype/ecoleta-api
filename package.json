@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "predev": "rm src/database/database.sqlite && npm run knex:migrate && npm run knex:seed",
-    "prestart": "npm run knex:migrate && npm run knex:seed",
-    "dev": "ts-node-dev --transpileOnly --ignore-watch node_modules src/server.ts",
-    "start": "ts-node --transpileOnly --ignore-watch node_modules src/server.ts",
+    "build": "tsc",
+    "dev": "ts-node-dev --transpileOnly --ignore-watch node_modules -r dotenv/config src/server.ts",
+    "start": "ts-node -r dotenv/config src/server.ts",
     "knex:seed": "knex --knexfile knexfile.ts seed:run",
     "knex:migrate": "knex --knexfile knexfile.ts migrate:latest"
   },
@@ -17,10 +16,12 @@
   "dependencies": {
     "celebrate": "^12.1.1",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.21.1",
     "multer": "^1.4.2",
-    "sqlite3": "^4.2.0"
+    "pg": "^8.2.1",
+    "ts-node": "^8.10.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
