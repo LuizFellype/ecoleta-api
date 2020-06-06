@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "predev": "rm src/database/database.sqlite && npm run knex:migrate && npm run knex:seed",
+    "prestart": "npm run knex:migrate && npm run knex:seed",
     "dev": "ts-node-dev --transpileOnly --ignore-watch node_modules src/server.ts",
+    "start": "ts-node --transpileOnly --ignore-watch node_modules src/server.ts",
     "knex:seed": "knex --knexfile knexfile.ts seed:run",
     "knex:migrate": "knex --knexfile knexfile.ts migrate:latest"
   },
