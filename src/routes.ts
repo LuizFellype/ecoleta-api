@@ -1,3 +1,5 @@
+import { config }from 'dotenv'
+config()
 import express from 'express'
 import multer from 'multer'
 import { celebrate, Joi } from 'celebrate'
@@ -6,11 +8,13 @@ import knex from './database/connections'
 
 const routes = express.Router()
 
+const apiUrl = process.env.API_URL || 'http://localhost:3333'
+
 routes.get('/items', async (req, res) => {
     try {
         const items = await knex('items').select('*')
 
-        const serializedItems = items.map(({ title, image }) => ({ title, image_url: `http://localhost:3333/uploads/${image}` }))
+        const serializedItems = items.map(({ title, image }) => ({ title, image_url: `${apiUrl}/uploads/${image}` }))
 
         res.json(serializedItems)
     } catch (error) {
@@ -34,7 +38,7 @@ routes.get('/points', async (req, res) => {
 
         const serializedPoints = points.map(({ image, restOfThePoint }) => ({
             ...restOfThePoint,
-            image_url: `http://localhost:3333/uploads/${image}`
+            image_url: `${apiUrl}/uploads/${image}`
         }))
 
         res.json(serializedPoints)
@@ -53,7 +57,7 @@ routes.get('/point/:id', async (req, res) => {
 
         const serializedPoint = {
             ...point,
-            image_url: `http://localhost:3333/uploads/${point.image}`
+            image_url: `${apiUrl}/uploads/${point.image}`
         }
 
         const items = await knex('items')
@@ -113,6 +117,26 @@ routes.get('/', (req, res) => {
     res.json({ ok: true })
 })
 
+routes.get('/1', async (req, res) => {
+    try {
+        const items = await knex('items').select('*')
+        
+        res.json(items)
+    } catch (error) {
+        // console.log('<<<<<<<<<<<<<<<------>>>>>>>>>>>>>>>', error)
+        res.json(error)
+    }
+})
+routes.get('/2', async (req, res) => {
+    try {
+        const items = await knex('points').select('*')
+        
+        res.json(items)
+    } catch (error) {
+        // console.log('<<<<<<<<<<<<<<<------>>>>>>>>>>>>>>>', error)
+        res.json(error)
+    }
+})
 export default routes
 
 // {
